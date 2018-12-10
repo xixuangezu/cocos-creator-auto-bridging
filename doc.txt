@@ -1,0 +1,8 @@
+﻿root类型
+    rootP	-- page     @ Scene中的单个页面              @param     pageName
+    rootS   -- scene    @ scene模板                      @param     sceneName
+    rootN   -- node     @ 将scene中单个node抽取出来      @param     sceneName:nodeName
+
+元素类型
+    node    @ 一般节点
+    btn     @ 按钮(回调模板)

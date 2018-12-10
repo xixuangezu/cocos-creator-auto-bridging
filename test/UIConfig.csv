@@ -1,0 +1,4 @@
+类型,名字,注释,声音ID,注释
+root,Main,主界面,1001,主界面
+btn,btnOpen,打开按钮,0,
+node,imgRole,角色图,0,
