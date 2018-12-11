@@ -1,4 +1,7 @@
-﻿root类型
+﻿csv设置
+    分隔符  ,   引用符 ""
+
+root类型
     rootP	-- page     @ Scene中的单个页面              @param     pageName
     rootS   -- scene    @ scene模板                      @param     sceneName
     rootN   -- node     @ 将scene中单个node抽取出来      @param     sceneName:nodeName
