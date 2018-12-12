@@ -20,6 +20,9 @@ class UnicodeStreamFilter:
 # if locale.getpreferredencoding() == 'cp936':
 sys.stdout = UnicodeStreamFilter(sys.stdout)
 
+# 工程通用配置
+DEBUG_MODEL = True
+
 
 # csv配置
 class dCsv:

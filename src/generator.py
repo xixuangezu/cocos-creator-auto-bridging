@@ -4,6 +4,8 @@
 from setting import *
 import chardet
 import csv
+from Cheetah.Template import Template
+import os
 
 class IOEncode:
     """
@@ -40,7 +42,7 @@ class CsvMaker:
         Args:
             filePoint: csv文件指针
             arrKeys: 字典key组成的数组
-            encoding: 转换成编码 默认
+            encoding: 转换成编码 默认utf-8
         """
         encoding = encoding or "utf-8"
 
@@ -68,8 +70,47 @@ class CsvMaker:
 
         return csvDict
 
+class TemplataMaker:
+    """
+    Cheetah 模板解析  附加debug提示
+    """
+    @staticmethod
+    def Template(filePath, searchList, encoding = None):
+        """
+        套用模板  DEBUG_MODEL = true 附加错误提示
+
+        Args:
+            searchList: 模板变量列表 [{}]格式
+            encoding: 转换成编码 默认utf-8
+        """
+        encoding = encoding or "utf-8"
+        deriveData = ""     # 解析结果
+
+        with open(filePath, "r") as fp:
+            fileEncoding = IOEncode.fileEncoding(fp)
+            # 单行检测错误
+            if DEBUG_MODEL :
+                oneLine = fp.readline().decode(fileEncoding).encode(encoding)
+                thisLine = 0
+                isError = False
+                while oneLine:
+                    try:
+                        thisLine += 1
+                        templateData = oneLine
+                        oneLine = fp.readline().decode(fileEncoding).encode(encoding)
+                        str(Template(templateData, searchList = searchList))
+                    except:
+                        print "error: TemplataMaker.Template() 解析错误. 文件: ", filePath, " 行号: ", thisLine
+                        isError = True
+                if isError:
+                    return deriveData
+                fp.seek(0)
+            # 导出解析
+            allLine = fp.read().decode(fileEncoding).encode(encoding)
+            deriveData = str(Template(allLine, searchList = searchList))
+        return deriveData
+
 def main():
-    with open("../test/UIConfig.csv", "r") as fp:
-        print CsvMaker.makeDict(fp, ["tt0", "tt1", "tt2"], "utf-8")[0]["tt0"]
+    print TemplataMaker.Template("../model/testModel.h", [{"testNum": "100"}])
 
 main()
