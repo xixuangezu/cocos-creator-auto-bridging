@@ -35,7 +35,7 @@ class CsvMaker:
     """
 
     @staticmethod
-    def makeDict(filePoint, arrKeys = [], encoding = None):
+    def makeDict(filePath, arrKeys = [], encoding = "utf-8"):
         """
         解析csv为字典  并转换编码
 
@@ -44,19 +44,20 @@ class CsvMaker:
             arrKeys: 字典key组成的数组
             encoding: 转换成编码 默认utf-8
         """
-        encoding = encoding or "utf-8"
+        csvData = None
 
-        fileEncoding = IOEncode.fileEncoding(filePoint)
+        with open(filePath, "r") as filePoint:
+            fileEncoding = IOEncode.fileEncoding(filePoint)
 
-        csvReader = csv.reader(filePoint, delimiter=',', quotechar='"')
+            csvReader = csv.reader(filePoint, delimiter=',', quotechar='"')
 
-        csvData = [[data.decode(fileEncoding).encode(encoding) 
-                    for data in line]
-                    for line in csvReader]
+            csvData = [[data.decode(fileEncoding).encode(encoding) 
+                        for data in line]
+                        for line in csvReader]
 
-        if not (csvData[0] and csvData[0][0]):
-            print "error: CsvMaker.makeDict() file: \"" + filePoint.name + "\" 没有内容"
-            return [{}]
+            if not (csvData[0] and csvData[0][0]):
+                print "error: CsvMaker.makeDict() file: \"" + filePoint.name + "\" 没有内容"
+                return [{}]
 
         #平齐key与var的数量
         keys = []
@@ -75,7 +76,7 @@ class TemplataMaker:
     Cheetah 模板解析  附加debug提示
     """
     @staticmethod
-    def Template(filePath, searchList, encoding = None):
+    def Template(filePath, searchList, encoding = "utf-8"):
         """
         套用模板  DEBUG_MODEL = true 附加错误提示
 
@@ -83,10 +84,10 @@ class TemplataMaker:
             searchList: 模板变量列表 [{}]格式
             encoding: 转换成编码 默认utf-8
         """
-        encoding = encoding or "utf-8"
         deriveData = ""     # 解析结果
 
         with open(filePath, "r") as fp:
+
             fileEncoding = IOEncode.fileEncoding(fp)
             # 单行检测错误
             if DEBUG_MODEL :
@@ -105,12 +106,32 @@ class TemplataMaker:
                 if isError:
                     return deriveData
                 fp.seek(0)
+
             # 导出解析
             allLine = fp.read().decode(fileEncoding).encode(encoding)
             deriveData = str(Template(allLine, searchList = searchList))
+            
         return deriveData
 
+class Generator:
+    """
+    解析逻辑
+    """
+    def generate_code(self):
+        """
+        解析
+        """
+        csvData =  CsvMaker.makeDict("../test/UiConfig.csv", ["type", "name", "note", "voice"])
+        csvData.pop(0)
+
+        for line in csvData:
+            if line["type"] == "rootP" :
+                TemplataMaker.Template("../model/LogicBox.m", [{"rootName": line["name"]}])
+
 def main():
-    print TemplataMaker.Template("../model/testModel.h", [{"testNum": "100"}])
+    # print TemplataMaker.Template("../model/LogicBox.m", [{"rootName": "Rolelist_Card"}])
+
+    generator = Generator()
+    generator.generate_code()
 
 main()
