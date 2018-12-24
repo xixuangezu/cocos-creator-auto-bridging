@@ -24,6 +24,11 @@ sys.stdout = UnicodeStreamFilter(sys.stdout)
 DEBUG_MODEL = True
 
 
-# csv配置
+# csv配置 d: default
 class dCsv:
-    startLine = 2
+    startLine = 1   # 开始行 下标0起
+
+# 默认地址配置
+class dPath:
+    csvPath = "../csv/UiConfig.csv"
+    savePath = "../out/"

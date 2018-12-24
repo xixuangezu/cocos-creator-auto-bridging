@@ -1,0 +1,7 @@
+类型,root名,注释,声音ID,rootN参1
+rootS,CourseScene,战斗页,,
+rootP,Fight,战斗页,,
+node,Fight_Img_Room_Bg,待机框,,
+btn,Fight_Btn_Reward,右按钮,,
+rootN,Team_Card,卡牌,,MainScene_Team_Card
+node,Team_Card_Img_Star_05,星,,
