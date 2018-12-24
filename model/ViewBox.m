@@ -11,13 +11,13 @@ function UiView${rootName}:ctor(_scene)
 #else if $rootType == "rootN"
     local creatorReader = creator.CreatorReader:createWithFilename('creator/Scenes/${fileName}.ccreator')
     self._scene = _scene
-    creatorReader:setup()
+    creatorReader:setupSpriteFrames()
     creatorReader:getSceneGraph()
 
     local vRoot = creatorReader:findChild("${rootName}")
     vRoot:retain()
     vRoot:removeFromParent()
-    vRoot:autorelease()
+    vRoot:autoRelease()
     self.vRoot = vRoot
 #end if
     self.vRoot.luaClass = self
